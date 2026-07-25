@@ -19,21 +19,22 @@ npm run build
 npm start
 ```
 
-## Vercel handoff
+## Deployment
 
 The project is a standard Next.js application and includes `vercel.json`.
-Import this directory as a new Vercel project or run `vercel` from the project
-root when deployment is approved. No environment variables are required for the
-initial site.
+It is connected to the `hey-aw/awzone-site` GitHub repository and deploys from
+`main` through Vercel.
 
-Keep the first deployment on its Vercel preview URL for review. Connect
-`awzone.com` only after the content and case-study details are approved. The
-current domain configuration has not been changed.
+- Production: https://awzone-site.vercel.app
+- Vercel project: `awzone/awzone-site`
+- GitHub: https://github.com/hey-aw/awzone-site
 
-## Content to confirm before launch
+No environment variables are required. `awzone.com` has not been connected and
+its DNS configuration has not been changed.
+
+## Before connecting awzone.com
 
 - Public examples, outcomes, and names for the education and healthcare work
 - Preferred short biography and location line
-- Whether notes should launch as placeholders or as published essays
 - Any social, résumé, or scheduling links to add
 - Final OpenSciEd case-study details and governance language
