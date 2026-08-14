@@ -39,6 +39,8 @@ test("presents AWzone as Matt's Portland notebook with selected work", async () 
   assert.doesNotMatch(page, /Check service health/);
   assert.doesNotMatch(page, /github\.com\/hey-aw\/eddo-skills/);
   assert.match(shell, /Source for this site/);
+  assert.match(shell, /https:\/\/github\.com\/hey-aw/);
+  assert.match(shell, /https:\/\/linkedin\.com\/in\/mattaw/);
 });
 
 test("publishes the MCP build note and keeps the other two notes as drafts", async () => {
