@@ -27,7 +27,7 @@ export type Note = {
 
 export const notes: Note[] = [
   {
-    draft: true,
+    draft: false,
     slug: "openscied-from-rag-to-mcp",
     title: "Replacing a curriculum RAG stack with a small, read-only MCP server",
     summary:
@@ -121,7 +121,7 @@ export const notes: Note[] = [
     links: [
       {
         label: "Eddo Skills source",
-        href: "https://github.com/hey-aw/eddo-skills",
+        href: "https://github.com/eddo-ai/eddo-skills",
         note: "Public marketplace and skill source.",
       },
     ],
@@ -176,7 +176,7 @@ export const notes: Note[] = [
     links: [
       {
         label: "Pacing Coach source",
-        href: "https://github.com/hey-aw/eddo-skills",
+        href: "https://github.com/eddo-ai/eddo-skills",
         note: "The evolving planning workflow and its references.",
       },
     ],

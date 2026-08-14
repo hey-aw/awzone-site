@@ -30,6 +30,9 @@ export function SiteFooter() {
         </p>
         <div>
           <a href="mailto:aw@awzone.com">aw@awzone.com</a>
+          <a href="https://github.com/hey-aw/awzone-site" target="_blank" rel="noreferrer">
+            Source for this site
+          </a>
           <a href="#top">Back to top ↑</a>
         </div>
       </div>
