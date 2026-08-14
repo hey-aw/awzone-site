@@ -1,7 +1,11 @@
 # AWZone
 
-Standalone personal site for AW, an AI product developer working across
-education and healthcare.
+Standalone editorial site for AW: dated notes, shareable working examples, and
+lessons from building AI products in education, healthcare, and other
+high-context settings.
+
+The site is intentionally organized like a public notebook. The homepage is a
+chronological index, and each note has a durable URL under `/notes/`.
 
 ## Local development
 
@@ -32,9 +36,16 @@ It is connected to the `hey-aw/awzone-site` GitHub repository and deploys from
 No environment variables are required. `awzone.com` has not been connected and
 its DNS configuration has not been changed.
 
+Preview this editorial direction before merging it to `main`. A branch preview
+must not be promoted to production or connected to the custom domain without an
+explicit launch decision.
+
 ## Before connecting awzone.com
 
-- Public examples, outcomes, and names for the education and healthcare work
-- Preferred short biography and location line
-- Any social, résumé, or scheduling links to add
-- Final OpenSciEd case-study details and governance language
+Connect `awzone.com` only after the editorial direction and initial public
+notes have been reviewed.
+
+- Confirm which working examples should be publicly linked
+- Review the OpenSciEd case note for governance and source language
+- Decide whether an RSS feed and archive taxonomy belong in the first release
+- Replace or remove the previous social preview artwork before domain launch

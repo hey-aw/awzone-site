@@ -4,52 +4,83 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 
-test("includes the positioning, case study, and contact details", async () => {
-  const page = await readFile(new URL("app/page.tsx", root), "utf8");
+test("presents AWzone as Matt's Portland notebook with notes hidden", async () => {
+  const [page, shell] = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/site-shell.tsx", root), "utf8"),
+  ]);
 
-  assert.match(page, /I build AI products/);
-  assert.match(page, /human understanding/);
-  assert.match(page, /Azure Cognitive Search and RAG prototype/);
-  assert.match(page, /governed, read-only MCP service/);
-  assert.match(page, /instructional skill/);
-  assert.match(page, /aw@awzone\.com/);
+  assert.match(page, /Hi, I&apos;m Matt AW\./);
+  assert.match(shell, /AWzone home/);
+  assert.match(page, /A public notebook · Portland, OR/);
+  assert.match(page, /decisions, prototypes, failures, and patterns worth reusing/);
+  assert.match(page, /Open examples/);
+  assert.match(page, /Things you can study or try/);
+  assert.match(page, /An experimental agent-friendly interface/);
+  assert.match(page, /Helpful solutions need to be/);
+  assert.match(page, /share examples and invite curiosity/);
+  assert.doesNotMatch(page, /invite shared curiosity/);
+  assert.doesNotMatch(page, /Latest notes/);
+  assert.doesNotMatch(page, /id="notes"/);
+  assert.doesNotMatch(shell, /href="\/#notes"/);
+  assert.doesNotMatch(page, /I build AI products\s*<br/);
+  assert.doesNotMatch(page, /Let&apos;s talk/);
+  assert.doesNotMatch(page, /Working principles/);
 });
 
-test("applies the reviewed landing-page content", async () => {
-  const page = await readFile(new URL("app/page.tsx", root), "utf8");
+test("keeps the three current notes as unpublished drafts", async () => {
+  const content = await readFile(new URL("app/content.ts", root), "utf8");
 
-  assert.match(page, /understanding people&apos;s needs/);
-  assert.match(page, /Learn the needs/);
-  assert.match(page, /Identify opportunities/);
-  assert.match(page, /Build, Measure, Learn/);
-  assert.match(page, /insatiable curiosity/);
-  assert.doesNotMatch(page, /Thinking in public, carefully/);
-  assert.doesNotMatch(page, /Learning products that explain themselves/);
-  assert.doesNotMatch(page, /Care workflows with less friction/);
+  assert.equal(content.match(/draft: true/g)?.length, 3);
+  assert.match(content, /export const publishedNotes = notes\.filter\(\(note\) => !note\.draft\)/);
+  assert.match(content, /return publishedNotes\.find/);
+  assert.match(content, /openscied-from-rag-to-mcp/);
+  assert.match(content, /skill-or-server/);
+  assert.match(content, /pacing-starts-with-the-calendar/);
+  assert.match(content, /3,421 documents and three indexing failures/);
+  assert.match(content, /Pacing Coach should remain available as a mature standalone skill with no MCP dependency/);
+  assert.match(content, /https:\/\/openscied-library-mcp\.vercel\.app\/healthz/);
+  assert.match(content, /https:\/\/github\.com\/hey-aw\/eddo-skills/);
+});
+
+test("generates routes only for published notes", async () => {
+  const route = await readFile(new URL("app/notes/[slug]/page.tsx", root), "utf8");
+
+  assert.match(route, /export const dynamicParams = false/);
+  assert.match(route, /generateStaticParams/);
+  assert.match(route, /publishedNotes\.map/);
+  assert.match(route, /generateMetadata/);
+  assert.match(route, /canonical: `\/notes\/\$\{note\.slug\}`/);
+  assert.match(route, /Working note/);
+  assert.match(route, /Corrections are welcome/);
 });
 
 test("includes core accessibility and responsive safeguards", async () => {
-  const [page, styles] = await Promise.all([
+  const [page, shell, styles] = await Promise.all([
     readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/site-shell.tsx", root), "utf8"),
     readFile(new URL("app/globals.css", root), "utf8"),
   ]);
 
   assert.match(page, /Skip to main content/);
-  assert.match(page, /aria-label="Primary navigation"/);
-  assert.match(page, /aria-labelledby="hero-title"/);
+  assert.match(shell, /aria-label="Primary navigation"/);
+  assert.match(page, /aria-labelledby="intro-title"/);
   assert.match(styles, /prefers-reduced-motion:\s*reduce/);
   assert.match(styles, /:focus-visible/);
+  assert.match(styles, /--display:\s*"Fraunces Variable"/);
+  assert.match(styles, /\.site-title\s*\{[^}]*font-family:\s*var\(--display\)/s);
   assert.match(styles, /@media \(max-width: 640px\)/);
   assert.match(styles, /min-height:\s*2\.75rem/);
 });
 
-test("keeps the deployment target explicit and domain changes gated", async () => {
+test("keeps Vercel deployment explicit and the custom domain gated", async () => {
   const [vercel, readme] = await Promise.all([
     readFile(new URL("vercel.json", root), "utf8"),
     readFile(new URL("README.md", root), "utf8"),
   ]);
 
   assert.equal(JSON.parse(vercel).framework, "nextjs");
-  assert.match(readme, /Vercel preview URL/);
-  assert.match(readme, /Connect\s+`awzone\.com`\s+only after/);
+  assert.match(readme, /Production: https:\/\/awzone-site\.vercel\.app/);
+  assert.match(readme, /Preview this editorial direction before merging it to `main`/);
+  assert.match(readme, /Connect `awzone\.com` only after/);
 });
