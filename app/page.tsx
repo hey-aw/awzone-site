@@ -1,153 +1,83 @@
-const caseStudies = [
+import { SiteFooter, SiteHeader } from "./site-shell";
+
+const examples = [
   {
-    number: "01",
-    title: "OpenSciEd curriculum access",
-    label: "Education · AI infrastructure",
+    status: "Live beta",
+    title: "OpenSciEd Library MCP",
     description:
-      "An evolving approach to helping educators find and use curriculum materials, moving from an Azure Cognitive Search and RAG prototype toward a governed, read-only MCP service and an instructional skill.",
-    detail:
-      "Case study in development: architecture, governance, retrieval quality, and what changed when the system was designed for both people and agents.",
-    featured: true,
+      "An experimental agent-friendly interface for retrieving and making use of open educational resources from OpenSciEd.",
+    href: "https://openscied-library-mcp.vercel.app/healthz",
+    linkLabel: "Check service health",
+  },
+  {
+    status: "Open source",
+    title: "Pacing Coach",
+    description:
+      "A conversational planning workflow that keeps the teacher in control of calendar, sequence, and pacing decisions.",
+    href: "https://github.com/hey-aw/eddo-skills",
+    linkLabel: "Browse the source",
   },
 ];
 
-function Arrow() {
-  return <span aria-hidden="true">↗</span>;
-}
-
 export default function Home() {
   return (
-    <main>
+    <main id="top">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
 
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="AW, home">
-          <span className="wordmark-mark">AW</span>
-          <span className="wordmark-text">Product developer</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="#work">Work</a>
-          <a href="#about">About</a>
-        </nav>
-        <a className="header-contact" href="mailto:aw@awzone.com">
-          Let&apos;s talk <Arrow />
-        </a>
-      </header>
+      <SiteHeader />
 
-      <div id="top" className="hero-shell">
-        <section id="main-content" className="hero" aria-labelledby="hero-title">
-          <div className="hero-kicker reveal reveal-1">
-            <span className="status-dot" aria-hidden="true" />
-            AI product development · education + healthcare
-          </div>
-          <h1 id="hero-title" className="reveal reveal-2">
-            I build AI products
-            <br />
-            for <em>human understanding.</em>
-          </h1>
-          <div className="hero-bottom reveal reveal-3">
+      <div className="page-shell">
+        <section id="main-content" className="intro" aria-labelledby="intro-title">
+          <p className="edition-note">A public notebook · Portland, OR</p>
+          <div className="intro-copy">
+            <h1 id="intro-title">Hi, I&apos;m Matt AW.</h1>
             <p>
-              I focus on understanding people&apos;s needs, identifying the most
-              limiting obstacles, and rapidly prototyping and iterating on
-              helpful applications that deliver value through ease and clarity.
+              I build and study AI products for learning, care, and other
+              high-context work. This is where I share the useful parts:
+              decisions, prototypes, failures, and patterns worth reusing.
             </p>
-            <a className="text-link" href="#work">
-              See selected work <span aria-hidden="true">↓</span>
-            </a>
           </div>
         </section>
 
-        <aside className="principles reveal reveal-4" aria-label="Working principles">
-          <p className="eyebrow">Working principles</p>
-          <ol>
-            <li>
-              <span>01</span>
-              Learn the needs
-            </li>
-            <li>
-              <span>02</span>
-              Identify opportunities
-            </li>
-            <li>
-              <span>03</span>
-              Build, Measure, Learn
-            </li>
-          </ol>
-        </aside>
+        <section id="examples" className="examples" aria-labelledby="examples-title">
+          <div className="section-heading">
+            <h2 id="examples-title">Open examples</h2>
+            <p>Things you can study or try</p>
+          </div>
+          <div className="example-grid">
+            {examples.map((example) => (
+              <article className="example-card" key={example.title}>
+                <p className="example-status">{example.status}</p>
+                <h3>{example.title}</h3>
+                <p>{example.description}</p>
+                <a href={example.href} target="_blank" rel="noreferrer">
+                  {example.linkLabel} <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="about" className="about" aria-labelledby="about-title">
+          <p className="section-kicker">About</p>
+          <div>
+            <h2 id="about-title">I am interested in how people understand things.</h2>
+            <p>
+              My work brings together product development, learning design,
+              user experience, and applied AI. Helpful solutions need to be
+              capable, adaptable, and clear. I have worked in education and
+              healthcare, where context matters and confident shortcuts can do
+              real harm. I am fascinated by how people use technology to make
+              chores easier and unlock discovery. I use this notebook space to
+              share examples and invite curiosity.
+            </p>
+          </div>
+        </section>
       </div>
 
-      <section id="work" className="section work-section" aria-labelledby="work-title">
-        <div className="section-intro">
-          <p className="eyebrow">Selected work · 2023–now</p>
-          <h2 id="work-title">Products that help people make sense of things.</h2>
-          <p>
-            A closer look at product, research, and systems work in education.
-            Public write-ups are intentionally careful about people, data, and
-            client context.
-          </p>
-        </div>
-
-        <div className="case-list">
-          {caseStudies.map((item) => (
-            <article
-              className={`case-card${item.featured ? " case-card-featured" : ""}`}
-              key={item.number}
-            >
-              <div className="case-number">{item.number}</div>
-              <div className="case-copy">
-                <p className="case-label">{item.label}</p>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-              <div className="case-detail">
-                {item.featured && <span className="in-progress">In development</span>}
-                <p>{item.detail}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="about" className="about-section" aria-labelledby="about-title">
-        <div className="about-lead">
-          <p className="eyebrow">A little background</p>
-          <h2 id="about-title">
-            Product sense,
-            <br />
-            systems thinking,
-            <br />
-            <em>insatiable curiosity.</em>
-          </h2>
-        </div>
-        <div className="about-copy">
-          <p>
-            My work brings together product development, learning design, and
-            applied AI. I like ambiguous problems, small capable teams, and
-            turning emerging technology into something people can understand
-            and trust.
-          </p>
-          <p>
-            I&apos;m especially interested in work that improves how people
-            learn, make decisions, and navigate high-stakes information.
-          </p>
-          <a className="button-link" href="mailto:aw@awzone.com">
-            aw@awzone.com <Arrow />
-          </a>
-        </div>
-      </section>
-
-      <footer>
-        <div>
-          <span className="footer-mark">AW</span>
-          <p>AI products for human understanding.</p>
-        </div>
-        <p className="footer-meta">California · Working thoughtfully across time zones</p>
-        <a href="#top" aria-label="Back to top">
-          Back to top ↑
-        </a>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

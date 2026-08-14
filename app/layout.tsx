@@ -3,35 +3,29 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://awzone.com"),
-  title: "AW — AI products for human understanding",
+  title: {
+    default: "AWzone — Notes and working examples",
+    template: "%s · AWzone",
+  },
   description:
-    "AW is an AI product developer working across education and healthcare, focused on learning, clear user experience, and systems that respect attention.",
+    "Notes, examples, and lessons from building AI products for learning, care, and other high-context work.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "AW — AI products for human understanding",
+    title: "AWzone — Notes and working examples",
     description:
-      "Product development across education and healthcare, focused on learning, clarity, and attention.",
+      "A public notebook about AI products, learning, user experience, and human understanding.",
     url: "https://awzone.com",
-    siteName: "AW",
+    siteName: "AWzone",
     type: "website",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "I build AI products for human understanding.",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "AW — AI products for human understanding",
+    card: "summary",
+    title: "AWzone — Notes and working examples",
     description:
-      "Product development across education and healthcare, focused on learning, clarity, and attention.",
-    images: ["/og.png"],
+      "A public notebook about AI products, learning, user experience, and human understanding.",
   },
 };
 

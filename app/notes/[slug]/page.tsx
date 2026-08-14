@@ -1,0 +1,127 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getNote, publishedNotes } from "../../content";
+import { SiteFooter, SiteHeader } from "../../site-shell";
+
+type NotePageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return publishedNotes.map((note) => ({ slug: note.slug }));
+}
+
+export async function generateMetadata({ params }: NotePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const note = getNote(slug);
+
+  if (!note) {
+    return {};
+  }
+
+  return {
+    title: note.title,
+    description: note.summary,
+    alternates: {
+      canonical: `/notes/${note.slug}`,
+    },
+    openGraph: {
+      title: note.title,
+      description: note.summary,
+      type: "article",
+      publishedTime: note.isoDate,
+      url: `/notes/${note.slug}`,
+    },
+  };
+}
+
+export default async function NotePage({ params }: NotePageProps) {
+  const { slug } = await params;
+  const note = getNote(slug);
+
+  if (!note) {
+    notFound();
+  }
+
+  return (
+    <main id="top">
+      <a className="skip-link" href="#note-content">
+        Skip to note
+      </a>
+      <SiteHeader />
+
+      <article id="note-content" className="article page-shell">
+        <header className="article-header">
+          <Link className="back-link" href="/">
+            ← All notes
+          </Link>
+          <div className="article-meta">
+            <p>{note.kind}</p>
+            <time dateTime={note.isoDate}>{note.date}</time>
+            <p>{note.readingTime}</p>
+          </div>
+          <h1>{note.title}</h1>
+          <p className="article-lede">{note.lede}</p>
+          <ul className="article-tags" aria-label="Topics">
+            {note.tags.map((tag) => (
+              <li key={tag}>{tag}</li>
+            ))}
+          </ul>
+        </header>
+
+        <div className="article-layout">
+          <div className="article-body">
+            {note.sections.map((section) => (
+              <section key={section.heading}>
+                <h2>{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                {section.bullets && (
+                  <ul>
+                    {section.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))}
+          </div>
+
+          <aside className="article-side" aria-label="Note details">
+            <div>
+              <p className="side-label">Status</p>
+              <p>Working note</p>
+              <p className="side-caption">
+                Shared while the work is still developing. Corrections are welcome.
+              </p>
+            </div>
+            {note.links && (
+              <div>
+                <p className="side-label">Related</p>
+                {note.links.map((link) => (
+                  <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                    <span>{link.label} ↗</span>
+                    <small>{link.note}</small>
+                  </a>
+                ))}
+              </div>
+            )}
+          </aside>
+        </div>
+
+        <footer className="article-footer">
+          <p>Have a correction or a related example?</p>
+          <a href={`mailto:aw@awzone.com?subject=${encodeURIComponent(note.title)}`}>
+            Send a note →
+          </a>
+        </footer>
+      </article>
+
+      <SiteFooter />
+    </main>
+  );
+}
