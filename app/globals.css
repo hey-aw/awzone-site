@@ -112,7 +112,7 @@ a {
 .site-footer a,
 .read-link,
 .back-link,
-.example-card > a,
+.example-links a,
 .article-footer a {
   min-height: 2.75rem;
   display: inline-flex;
@@ -130,7 +130,7 @@ a {
 .site-footer a:not(:hover),
 .read-link:not(:hover),
 .back-link:not(:hover),
-.example-card > a:not(:hover),
+.example-links a:not(:hover),
 .article-footer a:not(:hover) {
   text-decoration: none;
 }
@@ -348,7 +348,7 @@ a {
   border-bottom: 1px solid var(--rule);
 }
 
-.example-card:first-child {
+.example-card:nth-child(odd) {
   border-right: 1px solid var(--rule);
 }
 
@@ -374,9 +374,36 @@ a {
   line-height: 1.65;
 }
 
-.example-card > a {
-  align-self: flex-start;
+.example-links {
   margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.example-links a {
+  align-self: flex-start;
+}
+
+.example-links .secondary-link {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.more-experiments {
+  padding-block: 0 clamp(4rem, 8vw, 7rem);
+}
+
+.example-grid-secondary {
+  border-top: 1px solid var(--rule-dark);
+}
+
+.example-card-compact {
+  min-height: 17rem;
+}
+
+.example-card-compact h3 {
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
 }
 
 .about {
@@ -718,7 +745,7 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .example-card:first-child {
+  .example-card:nth-child(odd) {
     border-right: 0;
   }
 

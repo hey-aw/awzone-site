@@ -4,8 +4,9 @@ Standalone editorial site for AW: dated notes, shareable working examples, and
 lessons from building AI products in education, healthcare, and other
 high-context settings.
 
-The site is intentionally organized like a public notebook. The homepage is a
-chronological index, and each note has a durable URL under `/notes/`.
+The site is intentionally organized like a public notebook. The homepage
+features selected work and smaller experiments, while each published note has a
+durable URL under `/notes/`.
 
 ## Local development
 
