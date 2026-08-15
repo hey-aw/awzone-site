@@ -29,7 +29,7 @@ test("opens as a personal BBS with a welcome bulletin and working main menu", as
   assert.match(shell, /\[2\]<\/span> Projects/);
   assert.match(shell, /\[3\]<\/span> Links/);
   assert.match(shell, /<nav aria-label="Page links">/);
-  assert.match(shell, /<a href="#files">Hyperlinks<\/a>/);
+  assert.match(shell, /<Link href="\/#links">Hyperlinks<\/Link>/);
 
   assert.doesNotMatch(page, /Project index|Recent file|README\.TXT|directoryEntries/);
   assert.doesNotMatch(shell, /Public directory/);
@@ -68,15 +68,19 @@ test("presents all six real projects as topics across three project areas", asyn
   assert.doesNotMatch(page, /View links?/);
 });
 
-test("uses only the retained real links in the linked-resources area", async () => {
+test("uses the canonical links fragment and retains the real resource destinations", async () => {
   const [page, shell] = await Promise.all([
     readFile(new URL("app/page.tsx", root), "utf8"),
     readFile(new URL("app/site-shell.tsx", root), "utf8"),
   ]);
 
-  assert.match(page, /id="files" className="files-panel panel"/);
+  assert.match(page, /href: "\/#links"/);
+  assert.match(page, /id="links" className="files-panel panel"/);
   assert.match(page, /Linked resources/);
-  assert.match(page, /<h2 id="files-title">Hyperlinks<\/h2>/);
+  assert.match(page, /<h2 id="links-title">Hyperlinks<\/h2>/);
+  assert.match(shell, /<Link href="\/#links">/);
+  assert.match(shell, /<Link href="\/#links">Hyperlinks<\/Link>/);
+  assert.doesNotMatch(`${page}\n${shell}`, /(?:id|href)="\/?#files"/);
   assert.match(page, /Case studies, source code, build notes, and live services linked from the/);
   assert.match(page, /https:\/\/eddolearning\.com\/blog\/analyzing-student-work/);
   assert.match(page, /https:\/\/github\.com\/eddo-ai\/eddo-skills/);
@@ -125,7 +129,7 @@ test("derives the latest readable public note from published note data", async (
   assert.match(route, /Email a correction/);
 });
 
-test("renders typed, safe inline article links and accurate related source copy", async () => {
+test("renders typed, same-tab article links and accurate related source copy", async () => {
   const [content, route, styles] = await Promise.all([
     readFile(new URL("app/content.ts", root), "utf8"),
     readFile(new URL("app/notes/[slug]/page.tsx", root), "utf8"),
@@ -144,9 +148,9 @@ test("renders typed, safe inline article links and accurate related source copy"
 
   assert.match(route, /function ArticleParagraph/);
   assert.match(route, /typeof paragraph === "string"/);
-  assert.match(route, /target="_blank"/);
-  assert.match(route, /rel="noreferrer"/);
-  assert.match(route, /opens in a new tab/);
+  assert.match(route, /className="article-inline-link"/);
+  assert.match(route, /<a key=\{link\.href\} href=\{link\.href\}>/);
+  assert.doesNotMatch(route, /target="_blank"|rel="noreferrer"|opens in a new tab/);
   assert.doesNotMatch(route, /dangerouslySetInnerHTML/);
   assert.doesNotMatch(styles, /\.article-body h2::before/);
   assert.doesNotMatch(styles, /content:\s*"## "/);
@@ -164,12 +168,12 @@ test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", as
   assert.match(page, /<nav id="menu"/);
   assert.match(page, /<section id="latest"/);
   assert.match(page, /<section id="boards"/);
-  assert.match(page, /<section id="files"/);
+  assert.match(page, /<section id="links"/);
   assert.match(page, /<section id="about"/);
   assert.match(page, /aria-labelledby="main-menu-title"/);
   assert.match(page, /aria-labelledby="latest-title"/);
   assert.match(page, /aria-labelledby="boards-title"/);
-  assert.match(page, /aria-labelledby="files-title"/);
+  assert.match(page, /aria-labelledby="links-title"/);
   assert.match(page, /Choose a menu item, or press Tab to move through links/);
   assert.match(shell, /aria-label="Board shortcuts"/);
   assert.match(shell, /aria-label="External links and contact"/);
@@ -182,6 +186,18 @@ test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", as
   assert.match(styles, /min-width:\s*320px/);
   assert.match(styles, /overflow-x:\s*hidden/);
   assert.match(styles, /min-height:\s*2\.75rem/);
+});
+
+test("keeps every rendered link in the current tab", async () => {
+  const renderedSources = await Promise.all([
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/site-shell.tsx", root), "utf8"),
+    readFile(new URL("app/notes/[slug]/page.tsx", root), "utf8"),
+  ]);
+  const renderedSource = renderedSources.join("\n");
+
+  assert.doesNotMatch(renderedSource, /target\s*=\s*["']_blank["']/);
+  assert.doesNotMatch(renderedSource, /rel\s*=\s*["']noreferrer["']/);
 });
 
 test("preserves canonical, social, icon, and attribution metadata", async () => {

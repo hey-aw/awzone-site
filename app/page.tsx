@@ -154,9 +154,7 @@ function ResourceAnchor({ resource }: { resource: ResourceLink }) {
   );
 
   return resource.external ? (
-    <a href={resource.href} target="_blank" rel="noreferrer">
-      {label}
-    </a>
+    <a href={resource.href}>{label}</a>
   ) : (
     <Link href={resource.href}>{label}</Link>
   );
@@ -168,7 +166,7 @@ function MainMenu() {
     { number: "2", href: "#boards", label: "Projects", note: "Browse project topics by area" },
     {
       number: "3",
-      href: "#files",
+      href: "/#links",
       label: "Linked resources",
       note: "Case studies, source code, and live links",
     },
@@ -327,10 +325,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="files" className="files-panel panel" aria-labelledby="files-title">
+        <section id="links" className="files-panel panel" aria-labelledby="links-title">
           <header className="panel-titlebar">
             <p>Linked resources</p>
-            <h2 id="files-title">Hyperlinks</h2>
+            <h2 id="links-title">Hyperlinks</h2>
           </header>
           <p className="files-intro">
             Case studies, source code, build notes, and live services linked from the

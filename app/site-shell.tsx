@@ -28,7 +28,7 @@ export function SiteHeader() {
               </Link>
             </li>
             <li>
-              <Link href="/#files">
+              <Link href="/#links">
                 <span aria-hidden="true">[3]</span> Links
               </Link>
             </li>
@@ -49,17 +49,17 @@ export function SiteFooter() {
     <footer id="logoff" className="site-footer">
       <div className="page-shell footer-inner">
         <nav aria-label="Page links">
-          <a href="#files">Hyperlinks</a>
+          <Link href="/#links">Hyperlinks</Link>
         </nav>
         <nav aria-label="External links and contact">
           <a href="mailto:aw@awzone.com">Email</a>
-          <a href="https://github.com/hey-aw" target="_blank" rel="noreferrer">
+          <a href="https://github.com/hey-aw">
             GitHub <span aria-hidden="true">↗</span>
           </a>
-          <a href="https://linkedin.com/in/mattaw" target="_blank" rel="noreferrer">
+          <a href="https://linkedin.com/in/mattaw">
             LinkedIn <span aria-hidden="true">↗</span>
           </a>
-          <a href="https://github.com/hey-aw/awzone-site" target="_blank" rel="noreferrer">
+          <a href="https://github.com/hey-aw/awzone-site">
             Site source <span aria-hidden="true">↗</span>
           </a>
           <a href="#top">Top ↑</a>

@@ -28,11 +28,8 @@ function ArticleParagraph({ paragraph }: { paragraph: NoteParagraph }) {
             className="article-inline-link"
             href={part.href}
             key={`${part.href}-${index}`}
-            target="_blank"
-            rel="noreferrer"
           >
             {part.label}
-            <span className="visually-hidden"> (opens in a new tab)</span>
           </a>
         ),
       )}
@@ -143,7 +140,7 @@ export default async function NotePage({ params }: NotePageProps) {
                 <div>
                   <p className="side-label">Related</p>
                   {note.links.map((link) => (
-                    <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                    <a key={link.href} href={link.href}>
                       <span>{link.label} ↗</span>
                       <small>{link.note}</small>
                     </a>
