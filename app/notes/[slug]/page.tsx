@@ -34,6 +34,14 @@ export async function generateMetadata({ params }: NotePageProps): Promise<Metad
       type: "article",
       publishedTime: note.isoDate,
       url: `/notes/${note.slug}`,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: "AWzone BBS welcome screen",
+        },
+      ],
     },
   };
 }
@@ -47,81 +55,83 @@ export default async function NotePage({ params }: NotePageProps) {
   }
 
   return (
-    <main id="top">
+    <>
       <a className="skip-link" href="#note-content">
         Skip to note
       </a>
       <SiteHeader />
 
-      <article id="note-content" className="article page-shell">
-        <header className="article-header">
-          <Link className="back-link" href="/">
-            ← All notes
-          </Link>
-          <div className="article-meta">
-            <p>{note.kind}</p>
-            <time dateTime={note.isoDate}>{note.date}</time>
-            <p>{note.readingTime}</p>
-          </div>
-          <h1>{note.title}</h1>
-          <p className="article-lede">{note.lede}</p>
-          <ul className="article-tags" aria-label="Topics">
-            {note.tags.map((tag) => (
-              <li key={tag}>{tag}</li>
-            ))}
-          </ul>
-        </header>
-
-        <div className="article-layout">
-          <div className="article-body">
-            {note.sections.map((section) => (
-              <section key={section.heading}>
-                <h2>{section.heading}</h2>
-                {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-                {section.bullets && (
-                  <ul>
-                    {section.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                )}
-              </section>
-            ))}
-          </div>
-
-          <aside className="article-side" aria-label="Note details">
-            <div>
-              <p className="side-label">Status</p>
-              <p>Working note</p>
-              <p className="side-caption">
-                Shared while the work is still developing. Corrections are welcome.
-              </p>
+      <main id="note-content" className="note-shell page-shell">
+        <article className="article">
+          <header className="article-header">
+            <Link className="back-link" href="/">
+              ← Back to board
+            </Link>
+            <div className="article-meta">
+              <p>{note.kind}</p>
+              <time dateTime={note.isoDate}>{note.date}</time>
+              <p>{note.readingTime}</p>
             </div>
-            {note.links && (
-              <div>
-                <p className="side-label">Related</p>
-                {note.links.map((link) => (
-                  <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
-                    <span>{link.label} ↗</span>
-                    <small>{link.note}</small>
-                  </a>
-                ))}
-              </div>
-            )}
-          </aside>
-        </div>
+            <h1>{note.title}</h1>
+            <p className="article-lede">{note.lede}</p>
+            <ul className="article-tags" aria-label="Topics">
+              {note.tags.map((tag) => (
+                <li key={tag}>{tag}</li>
+              ))}
+            </ul>
+          </header>
 
-        <footer className="article-footer">
-          <p>Have a correction or a related example?</p>
-          <a href={`mailto:aw@awzone.com?subject=${encodeURIComponent(note.title)}`}>
-            Send a note →
-          </a>
-        </footer>
-      </article>
+          <div className="article-layout">
+            <div className="article-body">
+              {note.sections.map((section) => (
+                <section key={section.heading}>
+                  <h2>{section.heading}</h2>
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  {section.bullets && (
+                    <ul>
+                      {section.bullets.map((bullet) => (
+                        <li key={bullet}>{bullet}</li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              ))}
+            </div>
+
+            <aside className="article-side" aria-label="Note details">
+              <div>
+                <p className="side-label">Status</p>
+                <p>Public note</p>
+                <p className="side-caption">
+                  A dated note from the board. Corrections are welcome.
+                </p>
+              </div>
+              {note.links && (
+                <div>
+                  <p className="side-label">Related</p>
+                  {note.links.map((link) => (
+                    <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+                      <span>{link.label} ↗</span>
+                      <small>{link.note}</small>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </aside>
+          </div>
+
+          <footer className="article-footer">
+            <p>Corrections and related examples are welcome.</p>
+            <a href={`mailto:aw@awzone.com?subject=${encodeURIComponent(note.title)}`}>
+              Email a correction →
+            </a>
+          </footer>
+        </article>
+      </main>
 
       <SiteFooter />
-    </main>
+    </>
   );
 }

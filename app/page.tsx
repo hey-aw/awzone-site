@@ -1,171 +1,386 @@
 import Link from "next/link";
+import { publishedNotes } from "./content";
 import { SiteFooter, SiteHeader } from "./site-shell";
 
-type Example = {
-  status: string;
-  title: string;
-  description: string;
+type BoardId = "learning" | "classroom-media" | "side-projects";
+
+type ResourceLink = {
   href: string;
-  linkLabel: string;
+  label: string;
   external?: boolean;
-  secondaryLinks?: { href: string; label: string }[];
 };
 
-const primaryExamples: Example[] = [
+type BoardTopic = {
+  slug: string;
+  board: BoardId;
+  status: string;
+  title: string;
+  summary: string;
+  resources: ResourceLink[];
+  noteHref?: string;
+};
+
+type BoardArea = {
+  id: BoardId;
+  command: string;
+  title: string;
+  description: string;
+};
+
+const boardAreas: BoardArea[] = [
   {
-    status: "Case study",
-    title: "AI-supported student-work analysis",
-    description:
-      "A teacher-co-designed prototype for analyzing student writing, aligning feedback to a rubric, and surfacing class-wide trends in Wauwatosa.",
-    href: "https://eddolearning.com/blog/analyzing-student-work",
-    linkLabel: "Read the case study",
-    external: true,
+    id: "learning",
+    command: "A",
+    title: "Learning + curriculum",
+    description: "Curriculum, teacher planning, and student-work tools.",
   },
   {
-    status: "Open source",
-    title: "OpenSciEd Educator",
-    description:
-      "An installable role combining curriculum resource finding with a four-phase pacing workflow for teachers and instructional leaders.",
-    href: "https://github.com/eddo-ai/eddo-skills",
-    linkLabel: "Browse the skills",
-    external: true,
+    id: "classroom-media",
+    command: "B",
+    title: "Classroom media",
+    description: "Working examples for classroom audio and discussion.",
   },
   {
-    status: "Open source",
-    title: "Classroom Transcripts",
-    description:
-      "An Azure-based workflow for transcribing classroom audio, identifying teacher and student voices, and supporting discussion analysis.",
-    href: "https://github.com/eddo-ai/classroom-transcripts",
-    linkLabel: "Browse the source",
-    external: true,
-  },
-  {
-    status: "Native app",
-    title: "That Movie Night Life",
-    description:
-      "A SwiftUI iOS and tvOS app for drawing from a 10,734-film Letterboxd list while filtering watched titles and optional buzz kills.",
-    href: "https://github.com/hey-aw/that-movie-night-life",
-    linkLabel: "Browse the source",
-    external: true,
+    id: "side-projects",
+    command: "C",
+    title: "Side projects",
+    description: "Things built outside the main line of work.",
   },
 ];
 
-const moreExperiments: Example[] = [
+const boardTopics: BoardTopic[] = [
   {
-    status: "Live beta",
-    title: "OpenSciEd Library MCP",
-    description:
-      "An experimental agent-friendly interface for retrieving and making use of open educational resources from OpenSciEd.",
-    href: "/notes/openscied-from-rag-to-mcp",
-    linkLabel: "Read the build note",
-    secondaryLinks: [
+    slug: "student-work-analysis",
+    board: "learning",
+    status: "Case study",
+    title: "AI-supported student-work analysis",
+    summary:
+      "A teacher-co-designed prototype for analyzing student writing, aligning feedback to a rubric, and surfacing class-wide trends in Wauwatosa.",
+    resources: [
       {
-        href: "https://openscied-library-mcp.vercel.app/healthz",
-        label: "Live health status",
+        href: "https://eddolearning.com/blog/analyzing-student-work",
+        label: "Read case study",
+        external: true,
       },
     ],
   },
   {
+    slug: "openscied-educator",
+    board: "learning",
+    status: "Open source",
+    title: "OpenSciEd Educator",
+    summary:
+      "An installable role combining curriculum resource finding with a four-phase pacing workflow for teachers and instructional leaders.",
+    resources: [
+      {
+        href: "https://github.com/eddo-ai/eddo-skills",
+        label: "Open source",
+        external: true,
+      },
+    ],
+  },
+  {
+    slug: "openscied-library-mcp",
+    board: "learning",
+    status: "Live beta",
+    title: "OpenSciEd Library MCP",
+    summary:
+      "An experimental agent-friendly interface for retrieving and making use of open educational resources from OpenSciEd.",
+    noteHref: "/notes/openscied-from-rag-to-mcp",
+    resources: [
+      {
+        href: "/notes/openscied-from-rag-to-mcp",
+        label: "Read build note",
+      },
+      {
+        href: "https://openscied-library-mcp.vercel.app/healthz",
+        label: "Service health",
+        external: true,
+      },
+    ],
+  },
+  {
+    slug: "pacing-coach",
+    board: "learning",
     status: "Open source",
     title: "Pacing Coach",
-    description:
+    summary:
       "A conversational planning workflow that keeps the teacher in control of calendar, sequence, and pacing decisions.",
-    href: "https://github.com/eddo-ai/eddo-skills",
-    linkLabel: "Browse the source",
-    external: true,
+    resources: [
+      {
+        href: "https://github.com/eddo-ai/eddo-skills",
+        label: "Open source",
+        external: true,
+      },
+    ],
+  },
+  {
+    slug: "classroom-transcripts",
+    board: "classroom-media",
+    status: "Open source",
+    title: "Classroom Transcripts",
+    summary:
+      "An Azure-based workflow for transcribing classroom audio, identifying teacher and student voices, and supporting discussion analysis.",
+    resources: [
+      {
+        href: "https://github.com/eddo-ai/classroom-transcripts",
+        label: "Open source",
+        external: true,
+      },
+    ],
+  },
+  {
+    slug: "that-movie-night-life",
+    board: "side-projects",
+    status: "Native app",
+    title: "That Movie Night Life",
+    summary:
+      "A SwiftUI iOS and tvOS app for drawing from a 10,734-film Letterboxd list while filtering watched titles and optional buzz kills.",
+    resources: [
+      {
+        href: "https://github.com/hey-aw/that-movie-night-life",
+        label: "Open source",
+        external: true,
+      },
+    ],
   },
 ];
 
-function ExampleCard({ example, compact = false }: { example: Example; compact?: boolean }) {
+function ResourceAnchor({ resource }: { resource: ResourceLink }) {
+  const label = (
+    <>
+      {resource.label} <span aria-hidden="true">{resource.external ? "↗" : "→"}</span>
+    </>
+  );
+
+  return resource.external ? (
+    <a href={resource.href} target="_blank" rel="noreferrer">
+      {label}
+    </a>
+  ) : (
+    <Link href={resource.href}>{label}</Link>
+  );
+}
+
+function MainMenu() {
+  const commands = [
+    { number: "1", href: "#latest", label: "Latest notes", note: "Read the newest public note" },
+    { number: "2", href: "#boards", label: "Projects", note: "Browse project topics by area" },
+    {
+      number: "3",
+      href: "#files",
+      label: "Linked resources",
+      note: "Case studies, source code, and live links",
+    },
+    { number: "4", href: "#about", label: "About the sysop", note: "Who keeps this board" },
+    { number: "5", href: "#logoff", label: "Hyperlinks", note: "Email, profiles, and site source" },
+  ];
+
   return (
-    <article className={`example-card${compact ? " example-card-compact" : ""}`}>
-      <p className="example-status">{example.status}</p>
-      <h3>{example.title}</h3>
-      <p>{example.description}</p>
-      <div className="example-links">
-        {example.external ? (
-          <a href={example.href} target="_blank" rel="noreferrer">
-            {example.linkLabel} <span aria-hidden="true">↗</span>
-          </a>
-        ) : (
-          <Link href={example.href}>
-            {example.linkLabel} <span aria-hidden="true">→</span>
-          </Link>
-        )}
-        {example.secondaryLinks?.map((link) => (
-          <a className="secondary-link" href={link.href} key={link.href} target="_blank" rel="noreferrer">
-            {link.label} <span aria-hidden="true">↗</span>
-          </a>
+    <nav id="menu" className="main-menu panel" aria-labelledby="main-menu-title">
+      <header className="panel-titlebar">
+        <p>Main menu</p>
+        <h2 id="main-menu-title">Select an area</h2>
+      </header>
+      <ol>
+        {commands.map((command) => (
+          <li key={command.number}>
+            <a href={command.href}>
+              <span className="menu-command" aria-hidden="true">
+                [{command.number}]
+              </span>
+              <span>
+                <strong>{command.label}</strong>
+                <small>{command.note}</small>
+              </span>
+            </a>
+          </li>
         ))}
-      </div>
-    </article>
+      </ol>
+    </nav>
+  );
+}
+
+function ProjectActions({ topic }: { topic: BoardTopic }) {
+  const directResources = topic.resources.filter(
+    (resource) => resource.href !== topic.noteHref,
+  );
+
+  return (
+    <div className="topic-actions">
+      {topic.noteHref && (
+        <Link href={topic.noteHref}>
+          Read note <span aria-hidden="true">→</span>
+        </Link>
+      )}
+      {directResources.map((resource) => (
+        <ResourceAnchor resource={resource} key={resource.href} />
+      ))}
+    </div>
+  );
+}
+
+function MessageBoard({ board }: { board: BoardArea }) {
+  const topics = boardTopics.filter((topic) => topic.board === board.id);
+
+  return (
+    <section className={`message-board message-board-${board.id}`} aria-labelledby={`board-${board.id}`}>
+      <header className="board-heading">
+        <p aria-hidden="true">[{board.command}]</p>
+        <div>
+          <h3 id={`board-${board.id}`}>{board.title}</h3>
+          <p>{board.description}</p>
+        </div>
+      </header>
+      <ol className="topic-list">
+        {topics.map((topic) => (
+          <li key={topic.slug}>
+            <article className="board-topic">
+              <div className="topic-meta">
+                <p>Project topic</p>
+                <p>{topic.status}</p>
+              </div>
+              <h4>{topic.title}</h4>
+              <p>{topic.summary}</p>
+              <ProjectActions topic={topic} />
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 
 export default function Home() {
+  const latestNote = publishedNotes[0];
+
   return (
-    <main id="top">
-      <a className="skip-link" href="#main-content">
-        Skip to main content
+    <>
+      <a className="skip-link" href="#board-content">
+        Skip to bulletin board
       </a>
 
       <SiteHeader />
 
-      <div className="page-shell">
-        <section id="main-content" className="intro" aria-labelledby="intro-title">
-          <p className="edition-note">A public notebook · Portland, OR</p>
-          <div className="intro-copy">
-            <h1 id="intro-title">Hi, I&apos;m Matt AW.</h1>
+      <main id="board-content" className="bbs-shell page-shell">
+        <div className="bbs-opening">
+          <section className="welcome-bulletin panel" aria-labelledby="welcome-title">
+            <p className="panel-label">System bulletin</p>
+            <h1 id="welcome-title">Welcome to AWzone.</h1>
             <p>
-              I build and study AI products for learning, care, and other
-              high-context work. This is where I share the useful parts:
-              decisions, prototypes, failures, and patterns worth reusing.
+              This is Matt AW&apos;s public bulletin board: product development,
+              projects in teaching &amp; learning and healthcare, and fun experiments.
             </p>
-          </div>
-        </section>
+            <p className="welcome-instruction">
+              Read a note, browse the projects, or follow a hyperlink to the original
+              work.
+            </p>
+          </section>
 
-        <section id="examples" className="examples" aria-labelledby="examples-title">
-          <div className="section-heading">
-            <h2 id="examples-title">Open examples</h2>
-            <p>Things you can study or try</p>
-          </div>
-          <div className="example-grid">
-            {primaryExamples.map((example) => (
-              <ExampleCard example={example} key={example.title} />
+          <MainMenu />
+        </div>
+
+        {latestNote && (
+          <section id="latest" className="latest-bulletin panel" aria-labelledby="latest-title">
+            <header className="panel-titlebar">
+              <p>Latest notes</p>
+              <h2 id="latest-title">Note</h2>
+            </header>
+            <article className="bulletin-post">
+              <div className="post-side">
+                <p>Posted by</p>
+                <strong>Matt AW</strong>
+                <p>Published</p>
+                <time dateTime={latestNote.isoDate}>{latestNote.date}</time>
+                <p>Type</p>
+                <span>{latestNote.kind}</span>
+                <p>Read time</p>
+                <span>{latestNote.readingTime}</span>
+              </div>
+              <div className="post-copy">
+                <p className="post-marker">Note</p>
+                <h3>{latestNote.title}</h3>
+                <p className="post-lede">{latestNote.lede}</p>
+                <p>{latestNote.summary}</p>
+                <ul aria-label="Topics">
+                  {latestNote.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+                <Link href={`/notes/${latestNote.slug}`}>
+                  Read full note <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </article>
+          </section>
+        )}
+
+        <section id="boards" className="boards-panel panel" aria-labelledby="boards-title">
+          <header className="panel-titlebar">
+            <p>Project areas</p>
+            <h2 id="boards-title">Project boards</h2>
+          </header>
+          <div className="boards-grid">
+            {boardAreas.map((board) => (
+              <MessageBoard board={board} key={board.id} />
             ))}
           </div>
         </section>
 
-        <section className="more-experiments" aria-labelledby="experiments-title">
-          <div className="section-heading">
-            <h2 id="experiments-title">More experiments</h2>
-            <p>Smaller tools and focused explorations</p>
-          </div>
-          <div className="example-grid example-grid-secondary">
-            {moreExperiments.map((example) => (
-              <ExampleCard compact example={example} key={example.title} />
+        <section id="files" className="files-panel panel" aria-labelledby="files-title">
+          <header className="panel-titlebar">
+            <p>Linked resources</p>
+            <h2 id="files-title">Hyperlinks</h2>
+          </header>
+          <p className="files-intro">
+            Case studies, source code, build notes, and live services linked from the
+            project boards above.
+          </p>
+          <ul className="resource-list">
+            {boardTopics.map((topic) => (
+              <li id={`file-${topic.slug}`} key={topic.slug}>
+                <div>
+                  <p>{topic.status}</p>
+                  <h3>{topic.title}</h3>
+                </div>
+                <div className="resource-links">
+                  {topic.resources.map((resource) => (
+                    <ResourceAnchor resource={resource} key={resource.href} />
+                  ))}
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
-        <section id="about" className="about" aria-labelledby="about-title">
-          <p className="section-kicker">About</p>
-          <div>
-            <h2 id="about-title">I am interested in how people understand things.</h2>
+        <section id="about" className="sysop-panel panel" aria-labelledby="about-title">
+          <header className="panel-titlebar">
+            <p>Board operator</p>
+            <h2 id="about-title">About the sysop</h2>
+          </header>
+          <div className="sysop-copy">
             <p>
-              My work brings together product development, learning design,
-              user experience, and applied AI. Helpful solutions need to be
-              capable, adaptable, and clear. I have worked in education and
-              healthcare, where context matters and confident shortcuts can do
-              real harm. I am fascinated by how people use technology to make
-              chores easier and unlock discovery. I use this notebook space to
-              share examples and invite curiosity.
+              I&apos;m Matt AW. I work across product development, learning design,
+              user experience, and applied AI. I&apos;m interested in how people
+              understand things, and in the ways technology can make ordinary work
+              easier or unlock discovery.
+            </p>
+            <p>
+              Helpful solutions can create meaningful benefits for people.
             </p>
           </div>
         </section>
-      </div>
+
+        <p className="command-prompt">
+          <span className="prompt-path" aria-hidden="true">
+            AWZONE BBS&gt;
+          </span>
+          <span>Choose a menu item, or press Tab to move through links.</span>
+          <span className="prompt-cursor" aria-hidden="true" />
+        </p>
+      </main>
 
       <SiteFooter />
-    </main>
+    </>
   );
 }

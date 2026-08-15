@@ -20,12 +20,21 @@ export const metadata: Metadata = {
     url: "https://awzone.com",
     siteName: "AWzone",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "AWzone BBS welcome screen",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "AWzone — Notes and working examples",
     description:
       "A public notebook about AI products, learning, user experience, and human understanding.",
+    images: ["/og.png"],
   },
 };
 

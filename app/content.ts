@@ -32,7 +32,7 @@ export const notes: Note[] = [
     title: "Replacing a curriculum RAG stack with a small, read-only MCP server",
     summary:
       "What changed when we stopped treating semantic search as the product and started giving an agent a bounded way to navigate curriculum structure.",
-    kind: "Case note",
+    kind: "Public note",
     date: "Jul 25, 2026",
     isoDate: "2026-07-25",
     readingTime: "6 min",
