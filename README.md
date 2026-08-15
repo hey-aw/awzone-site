@@ -1,12 +1,13 @@
 # AWZone
 
-Standalone editorial site for AW: dated notes, shareable working examples, and
-lessons from building AI products in education, healthcare, and other
-high-context settings.
+Standalone public bulletin board for AW: product development, projects in
+teaching and learning and healthcare, fun experiments, dated notes, and links
+to the original work.
 
-The site is intentionally organized like a public notebook. The homepage
-features selected work and smaller experiments, while each published note has a
-durable URL under `/notes/`.
+The homepage is organized like a restrained late-1980s or early-1990s personal
+BBS. It opens with a system bulletin and main menu, groups work into project
+boards, and keeps supporting links in a separate resources area. Published notes
+retain durable URLs under `/notes/`.
 
 ## Local development
 
@@ -30,23 +31,11 @@ The project is a standard Next.js application and includes `vercel.json`.
 It is connected to the `hey-aw/awzone-site` GitHub repository and deploys from
 `main` through Vercel.
 
-- Production: https://awzone-site.vercel.app
+- Production: https://www.awzone.com
+- Vercel fallback: https://awzone-site.vercel.app
 - Vercel project: `awzone/awzone-site`
 - GitHub: https://github.com/hey-aw/awzone-site
 
-No environment variables are required. `awzone.com` has not been connected and
-its DNS configuration has not been changed.
-
-Preview this editorial direction before merging it to `main`. A branch preview
-must not be promoted to production or connected to the custom domain without an
-explicit launch decision.
-
-## Before connecting awzone.com
-
-Connect `awzone.com` only after the editorial direction and initial public
-notes have been reviewed.
-
-- Confirm which working examples should be publicly linked
-- Review the OpenSciEd case note for governance and source language
-- Decide whether an RSS feed and archive taxonomy belong in the first release
-- Replace or remove the previous social preview artwork before domain launch
+No environment variables are required. Redesign branches should be previewed
+before merge and must not be deployed or promoted without an explicit launch
+decision.

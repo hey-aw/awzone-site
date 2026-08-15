@@ -1,6 +1,15 @@
+export type NoteParagraphPart =
+  | string
+  | {
+      label: string;
+      href: `https://${string}`;
+    };
+
+export type NoteParagraph = string | { parts: NoteParagraphPart[] };
+
 export type NoteSection = {
   heading: string;
-  paragraphs: string[];
+  paragraphs: NoteParagraph[];
   bullets?: string[];
 };
 
@@ -32,7 +41,7 @@ export const notes: Note[] = [
     title: "Replacing a curriculum RAG stack with a small, read-only MCP server",
     summary:
       "What changed when we stopped treating semantic search as the product and started giving an agent a bounded way to navigate curriculum structure.",
-    kind: "Case note",
+    kind: "Public note",
     date: "Jul 25, 2026",
     isoDate: "2026-07-25",
     readingTime: "6 min",
@@ -43,7 +52,21 @@ export const notes: Note[] = [
       {
         heading: "The first prototype",
         paragraphs: [
-          "We published the first version of our OpenSciEd instructional coach in 2024 as part of a seed grant from Digital Promise and collaboration with the Einstein Project and the OpenSciEd team. Our goal was to extend coaching and professional learning from an OpenSciEd curriculum launch into the school year and to give teachers support on demand and in the classroom.",
+          {
+            parts: [
+              "We published the first version of our OpenSciEd instructional coach in 2024 as part of a seed grant from Digital Promise and collaboration with the ",
+              {
+                label: "Einstein Project",
+                href: "https://www.einsteinproject.org/",
+              },
+              " and the ",
+              {
+                label: "OpenSciEd",
+                href: "https://openscied.org/",
+              },
+              " team. Our goal was to extend coaching and professional learning from an OpenSciEd curriculum launch into the school year and to give teachers support on demand and in the classroom.",
+            ],
+          },
           "We began with the common RAG architecture of the moment: split curriculum documents into chunks, generate embeddings, store them in Azure Cognitive Search, and retrieve semantically similar passages for a teacher-facing assistant. We prototyped the experience in Streamlit and Next.js prototypes.",
           "The retrieval worked, returning relevant documents from across the instructional materials. We found that the agent was a good assistant, but not a robust coach. A plausible passage did not keep the assistant inside the curriculum's instructional logic, and a user could redirect it away from the intended approach. The fixed search infrastructure was also costly for an experiment with uneven use.",
         ],
@@ -77,9 +100,9 @@ export const notes: Note[] = [
     ],
     links: [
       {
-        label: "OpenSciEd Library MCP health",
-        href: "https://openscied-library-mcp.vercel.app/healthz",
-        note: "Live status for the public read-only beta.",
+        label: "Eddo Skills source",
+        href: "https://github.com/eddo-ai/eddo-skills",
+        note: "Source for the agent skills described in this note.",
       },
     ],
   },

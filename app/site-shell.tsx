@@ -2,18 +2,42 @@ import Link from "next/link";
 
 export function SiteHeader() {
   return (
-    <header className="site-header">
+    <header className="site-header" id="top">
       <div className="page-shell masthead">
         <div className="brand-lockup">
-          <Link className="site-title" href="/" aria-label="AWzone home">
-            AWzone
+          <Link className="site-title" href="/" aria-label="AWzone BBS home">
+            AWZONE BBS
           </Link>
-          <p>Notes and working examples from AW</p>
+          <p>Matt AW&apos;s public board / Portland, Oregon</p>
         </div>
-        <nav aria-label="Primary navigation">
-          <Link href="/#examples">Examples</Link>
-          <Link href="/#about">About</Link>
-          <a href="mailto:aw@awzone.com">Email</a>
+        <nav aria-label="Board shortcuts">
+          <ol>
+            <li>
+              <Link href="/#menu">
+                <span aria-hidden="true">[0]</span> Menu
+              </Link>
+            </li>
+            <li>
+              <Link href="/#latest">
+                <span aria-hidden="true">[1]</span> Notes
+              </Link>
+            </li>
+            <li>
+              <Link href="/#boards">
+                <span aria-hidden="true">[2]</span> Projects
+              </Link>
+            </li>
+            <li>
+              <Link href="/#links">
+                <span aria-hidden="true">[3]</span> Links
+              </Link>
+            </li>
+            <li>
+              <Link href="/#about">
+                <span aria-hidden="true">[4]</span> Sysop
+              </Link>
+            </li>
+          </ol>
         </nav>
       </div>
     </header>
@@ -22,25 +46,24 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
+    <footer id="logoff" className="site-footer">
       <div className="page-shell footer-inner">
-        <p>
-          <span>AWzone</span>
-          A public notebook about AI products, learning, and human understanding.
-        </p>
-        <div>
-          <a href="mailto:aw@awzone.com">aw@awzone.com</a>
-          <a href="https://github.com/hey-aw" target="_blank" rel="noreferrer">
-            GitHub
+        <nav aria-label="Page links">
+          <Link href="/#links">Hyperlinks</Link>
+        </nav>
+        <nav aria-label="External links and contact">
+          <a href="mailto:aw@awzone.com">Email</a>
+          <a href="https://github.com/hey-aw">
+            GitHub <span aria-hidden="true">↗</span>
           </a>
-          <a href="https://linkedin.com/in/mattaw" target="_blank" rel="noreferrer">
-            LinkedIn
+          <a href="https://linkedin.com/in/mattaw">
+            LinkedIn <span aria-hidden="true">↗</span>
           </a>
-          <a href="https://github.com/hey-aw/awzone-site" target="_blank" rel="noreferrer">
-            Source for this site
+          <a href="https://github.com/hey-aw/awzone-site">
+            Site source <span aria-hidden="true">↗</span>
           </a>
-          <a href="#top">Back to top ↑</a>
-        </div>
+          <a href="#top">Top ↑</a>
+        </nav>
       </div>
     </footer>
   );
