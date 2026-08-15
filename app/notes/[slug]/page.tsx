@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getNote, publishedNotes } from "../../content";
+import { getNote, type NoteParagraph, publishedNotes } from "../../content";
 import { SiteFooter, SiteHeader } from "../../site-shell";
 
 type NotePageProps = {
@@ -12,6 +11,33 @@ export const dynamicParams = false;
 
 export function generateStaticParams() {
   return publishedNotes.map((note) => ({ slug: note.slug }));
+}
+
+function ArticleParagraph({ paragraph }: { paragraph: NoteParagraph }) {
+  if (typeof paragraph === "string") {
+    return <p>{paragraph}</p>;
+  }
+
+  return (
+    <p>
+      {paragraph.parts.map((part, index) =>
+        typeof part === "string" ? (
+          part
+        ) : (
+          <a
+            className="article-inline-link"
+            href={part.href}
+            key={`${part.href}-${index}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {part.label}
+            <span className="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        ),
+      )}
+    </p>
+  );
 }
 
 export async function generateMetadata({ params }: NotePageProps): Promise<Metadata> {
@@ -64,9 +90,11 @@ export default async function NotePage({ params }: NotePageProps) {
       <main id="note-content" className="note-shell page-shell">
         <article className="article">
           <header className="article-header">
-            <Link className="back-link" href="/">
+            {/* Full document navigation is intentional for the board transition. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a className="back-link" href="/">
               ← Back to board
-            </Link>
+            </a>
             <div className="article-meta">
               <p>{note.kind}</p>
               <time dateTime={note.isoDate}>{note.date}</time>
@@ -87,7 +115,10 @@ export default async function NotePage({ params }: NotePageProps) {
                 <section key={section.heading}>
                   <h2>{section.heading}</h2>
                   {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
+                    <ArticleParagraph
+                      key={typeof paragraph === "string" ? paragraph : section.heading}
+                      paragraph={paragraph}
+                    />
                   ))}
                   {section.bullets && (
                     <ul>

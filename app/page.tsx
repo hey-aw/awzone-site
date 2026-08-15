@@ -307,9 +307,9 @@ export default function Home() {
                     <li key={tag}>{tag}</li>
                   ))}
                 </ul>
-                <Link href={`/notes/${latestNote.slug}`}>
+                <a href={`/notes/${latestNote.slug}`}>
                   Read full note <span aria-hidden="true">→</span>
-                </Link>
+                </a>
               </div>
             </article>
           </section>

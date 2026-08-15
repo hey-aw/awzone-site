@@ -62,6 +62,8 @@ test("presents all six real projects as topics across three project areas", asyn
   assert.match(page, /resource\.href !== topic\.noteHref/);
   assert.match(page, /<ResourceAnchor resource=\{resource\}/);
   assert.match(page, /Read note/);
+  assert.match(page, /<a href=\{`\/notes\/\$\{latestNote\.slug\}`\}>/);
+  assert.doesNotMatch(page, /<Link href=\{`\/notes\/\$\{latestNote\.slug\}`\}>/);
   assert.doesNotMatch(page, /href=\{`#file-\$\{topic\.slug\}`\}/);
   assert.doesNotMatch(page, /View links?/);
 });
@@ -114,11 +116,40 @@ test("derives the latest readable public note from published note data", async (
   assert.match(route, /generateStaticParams/);
   assert.match(route, /canonical: `\/notes\/\$\{note\.slug\}`/);
   assert.match(route, /<main id="note-content" className="note-shell page-shell">/);
+  assert.match(route, /<a className="back-link" href="\/">/);
   assert.match(route, /← Back to board/);
+  assert.doesNotMatch(route, /<Link className="back-link"/);
   assert.match(content, /kind: "Public note"/);
   assert.match(route, /Public note/);
   assert.match(route, /A dated note from the board/);
   assert.match(route, /Email a correction/);
+});
+
+test("renders typed, safe inline article links and accurate related source copy", async () => {
+  const [content, route, styles] = await Promise.all([
+    readFile(new URL("app/content.ts", root), "utf8"),
+    readFile(new URL("app/notes/[slug]/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+
+  assert.match(content, /export type NoteParagraphPart/);
+  assert.match(content, /href: `https:\/\/\$\{string\}`/);
+  assert.match(content, /label: "Einstein Project"/);
+  assert.match(content, /href: "https:\/\/www\.einsteinproject\.org\/"/);
+  assert.match(content, /label: "OpenSciEd"/);
+  assert.match(content, /href: "https:\/\/openscied\.org\/"/);
+  assert.match(content, /label: "Eddo Skills source"/);
+  assert.match(content, /href: "https:\/\/github\.com\/eddo-ai\/eddo-skills"/);
+  assert.match(content, /Source for the agent skills described in this note\./);
+
+  assert.match(route, /function ArticleParagraph/);
+  assert.match(route, /typeof paragraph === "string"/);
+  assert.match(route, /target="_blank"/);
+  assert.match(route, /rel="noreferrer"/);
+  assert.match(route, /opens in a new tab/);
+  assert.doesNotMatch(route, /dangerouslySetInnerHTML/);
+  assert.doesNotMatch(styles, /\.article-body h2::before/);
+  assert.doesNotMatch(styles, /content:\s*"## "/);
 });
 
 test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", async () => {
