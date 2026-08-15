@@ -41,28 +41,29 @@ export const notes: Note[] = [
       "This is a field note about retiring an expensive retrieval prototype without losing the useful product and instructional lessons it produced.",
     sections: [
       {
-        heading: "The first approach",
+        heading: "The first prototype",
         paragraphs: [
-          "We began with the common RAG architecture of the moment: split curriculum documents into chunks, generate embeddings, store them in Azure Cognitive Search, and retrieve semantically similar passages for a teacher-facing assistant. We tried the experience in Streamlit and Next.js prototypes.",
-          "The retrieval worked. The harder problem was behavior. A plausible passage did not keep the assistant inside the curriculum's instructional logic, and a user could redirect it away from the intended approach. The fixed search infrastructure was also costly for an experiment with uneven use.",
+          "We published the first version of our OpenSciEd instructional coach in 2024 as part of a seed grant from Digital Promise and collaboration with the Einstein Project and the OpenSciEd team. Our goal was to extend coaching and professional learning from an OpenSciEd curriculum launch into the school year and to give teachers support on demand and in the classroom.",
+          "We began with the common RAG architecture of the moment: split curriculum documents into chunks, generate embeddings, store them in Azure Cognitive Search, and retrieve semantically similar passages for a teacher-facing assistant. We prototyped the experience in Streamlit and Next.js prototypes.",
+          "The retrieval worked, returning relevant documents from across the instructional materials. We found that the agent was a good assistant, but not a robust coach. A plausible passage did not keep the assistant inside the curriculum's instructional logic, and a user could redirect it away from the intended approach. The fixed search infrastructure was also costly for an experiment with uneven use.",
         ],
       },
       {
-        heading: "The smaller successor",
+        heading: "Developing a smarter successor",
         paragraphs: [
           "The current beta exposes a versioned OpenSciEd snapshot through four read-only operations: check status, browse the hierarchy, run a bounded search, and read a bounded excerpt. At the time of writing, the snapshot reports 3,421 documents and three indexing failures.",
           "The hierarchy and metadata do more of the work. An agent can move from grade to unit to lesson, ask a narrow question, and read only the sources it needs. The server supplies curriculum evidence; it does not decide how teaching should work.",
         ],
       },
       {
-        heading: "Where the instructional guidance belongs",
+        heading: "Guiding the response with agent skills",
         paragraphs: [
           "Instructional stance belongs in a skill: visible instructions that describe teacher control, inquiry and sensemaking, coherence across lessons, and how to distinguish a unit overview from a lesson or assessment artifact.",
           "That separation is useful. The server can remain a small, inspectable library interface. A skill can be reviewed and revised as the teaching workflow develops. Either can improve without pretending retrieval alone is pedagogy.",
         ],
       },
       {
-        heading: "What I would measure next",
+        heading: "What’s next",
         paragraphs: [
           "The next useful evidence is comparative: whether teachers find the cited sources relevant, whether the agent stays in the requested grade, unit, and lesson scope, and whether the skill helps preserve the curriculum's intent under real planning pressure.",
         ],
