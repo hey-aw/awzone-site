@@ -69,9 +69,10 @@ test("presents all six real projects as topics across three project areas", asyn
 });
 
 test("uses the canonical links fragment and retains the real resource destinations", async () => {
-  const [page, shell] = await Promise.all([
+  const [page, shell, layout] = await Promise.all([
     readFile(new URL("app/page.tsx", root), "utf8"),
     readFile(new URL("app/site-shell.tsx", root), "utf8"),
+    readFile(new URL("app/layout.tsx", root), "utf8"),
   ]);
 
   assert.match(page, /href: "\/#links"/);
@@ -91,8 +92,8 @@ test("uses the canonical links fragment and retains the real resource destinatio
   assert.match(shell, /mailto:aw@awzone\.com/);
   assert.match(shell, /https:\/\/github\.com\/hey-aw/);
   assert.match(shell, /https:\/\/linkedin\.com\/in\/mattaw/);
-  assert.match(shell, /https:\/\/mastodon\.social\/@hey_aw/);
-  assert.match(shell, /rel="me"/);
+  assert.match(layout, /<link rel="me" href="https:\/\/mastodon\.social\/@hey_aw" \/>/);
+  assert.doesNotMatch(shell, /https:\/\/mastodon\.social\/@hey_aw|rel="me"/);
   assert.match(shell, /https:\/\/github\.com\/hey-aw\/awzone-site/);
 });
 
