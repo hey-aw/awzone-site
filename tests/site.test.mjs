@@ -91,6 +91,8 @@ test("uses the canonical links fragment and retains the real resource destinatio
   assert.match(shell, /mailto:aw@awzone\.com/);
   assert.match(shell, /https:\/\/github\.com\/hey-aw/);
   assert.match(shell, /https:\/\/linkedin\.com\/in\/mattaw/);
+  assert.match(shell, /https:\/\/mastodon\.social\/@hey_aw/);
+  assert.match(shell, /rel="me"/);
   assert.match(shell, /https:\/\/github\.com\/hey-aw\/awzone-site/);
 });
 

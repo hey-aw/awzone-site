@@ -59,6 +59,9 @@ export function SiteFooter() {
           <a href="https://linkedin.com/in/mattaw">
             LinkedIn <span aria-hidden="true">↗</span>
           </a>
+          <a href="https://mastodon.social/@hey_aw" rel="me">
+            Mastodon <span aria-hidden="true">↗</span>
+          </a>
           <a href="https://github.com/hey-aw/awzone-site">
             Site source <span aria-hidden="true">↗</span>
           </a>
