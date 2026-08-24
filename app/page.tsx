@@ -144,6 +144,36 @@ const boardTopics: BoardTopic[] = [
       },
     ],
   },
+  {
+    slug: "pink-door",
+    board: "side-projects",
+    status: "Live site",
+    title: "The House with the Pink Door",
+    summary:
+      "A daily Portland house-lighting project that turns odd observances into a public theme, vote, and evening color display.",
+    resources: [
+      {
+        href: "https://pink.awzone.com/",
+        label: "Visit Pink Door",
+        external: true,
+      },
+    ],
+  },
+  {
+    slug: "henrys-habitat",
+    board: "side-projects",
+    status: "Open source",
+    title: "Henry's Habitat",
+    summary:
+      "A Raspberry Pi dashboard for Henry the red-footed tortoise, combining Zigbee temperature and humidity readings with a live habitat camera.",
+    resources: [
+      {
+        href: "https://github.com/hey-aw/henry-habitat",
+        label: "Open source",
+        external: true,
+      },
+    ],
+  },
 ];
 
 function ResourceAnchor({ resource }: { resource: ResourceLink }) {

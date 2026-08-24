@@ -40,13 +40,13 @@ test("opens as a personal BBS with a welcome bulletin and working main menu", as
   assert.doesNotMatch(shell, /Logoff \/ external links|does not create an account or session/);
 });
 
-test("presents all six real projects as topics across three project areas", async () => {
+test("presents all eight real projects as topics across three project areas", async () => {
   const page = await readFile(new URL("app/page.tsx", root), "utf8");
 
   const boardsBlock = page.match(/const boardAreas: BoardArea\[\] = \[([\s\S]*?)\n\];/)?.[1];
   const topicsBlock = page.match(/const boardTopics: BoardTopic\[\] = \[([\s\S]*?)\n\];/)?.[1];
   assert.equal(boardsBlock?.match(/title:/g)?.length, 3);
-  assert.equal(topicsBlock?.match(/title:/g)?.length, 6);
+  assert.equal(topicsBlock?.match(/title:/g)?.length, 8);
 
   assert.match(page, /Learning \+ curriculum/);
   assert.match(page, /Classroom media/);
@@ -57,6 +57,10 @@ test("presents all six real projects as topics across three project areas", asyn
   assert.match(page, /Pacing Coach/);
   assert.match(page, /Classroom Transcripts/);
   assert.match(page, /That Movie Night Life/);
+  assert.match(page, /The House with the Pink Door/);
+  assert.match(page, /Henry's Habitat/);
+  assert.match(page, /href: "https:\/\/pink\.awzone\.com\/"/);
+  assert.match(page, /href: "https:\/\/github\.com\/hey-aw\/henry-habitat"/);
   assert.match(page, /Project topic/);
   assert.match(page, /function ProjectActions/);
   assert.match(page, /resource\.href !== topic\.noteHref/);
