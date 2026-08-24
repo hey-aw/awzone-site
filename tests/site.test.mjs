@@ -60,6 +60,7 @@ test("presents all eight real projects as topics across three project areas", as
   assert.match(page, /The House with the Pink Door/);
   assert.match(page, /Henry's Habitat/);
   assert.match(page, /href: "https:\/\/pink\.awzone\.com\/"/);
+  assert.match(page, /href: "https:\/\/github\.com\/hey-aw\/festavia-theme-site"/);
   assert.match(page, /href: "https:\/\/github\.com\/hey-aw\/henry-habitat"/);
   assert.match(page, /Project topic/);
   assert.match(page, /function ProjectActions/);

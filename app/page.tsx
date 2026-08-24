@@ -157,6 +157,11 @@ const boardTopics: BoardTopic[] = [
         label: "Visit Pink Door",
         external: true,
       },
+      {
+        href: "https://github.com/hey-aw/festavia-theme-site",
+        label: "Open source",
+        external: true,
+      },
     ],
   },
   {
