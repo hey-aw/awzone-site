@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { publishedNotes } from "./content";
+import { ProjectKeyboardNavigation } from "./project-keyboard-navigation";
 import { SiteFooter, SiteHeader } from "./site-shell";
 
 type BoardId = "learning" | "classroom-media" | "side-projects";
@@ -74,7 +75,7 @@ const boardTopics: BoardTopic[] = [
     resources: [
       {
         href: "https://github.com/eddo-ai/eddo-skills",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -92,11 +93,6 @@ const boardTopics: BoardTopic[] = [
         href: "/notes/openscied-from-rag-to-mcp",
         label: "Read build note",
       },
-      {
-        href: "https://openscied-library-mcp.vercel.app/healthz",
-        label: "Service health",
-        external: true,
-      },
     ],
   },
   {
@@ -109,7 +105,7 @@ const boardTopics: BoardTopic[] = [
     resources: [
       {
         href: "https://github.com/eddo-ai/eddo-skills",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -124,7 +120,7 @@ const boardTopics: BoardTopic[] = [
     resources: [
       {
         href: "https://github.com/eddo-ai/classroom-transcripts",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -144,7 +140,7 @@ const boardTopics: BoardTopic[] = [
       },
       {
         href: "https://github.com/hey-aw/that-movie-night-life",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -164,7 +160,7 @@ const boardTopics: BoardTopic[] = [
       },
       {
         href: "https://github.com/hey-aw/festavia-theme-site",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -179,7 +175,7 @@ const boardTopics: BoardTopic[] = [
     resources: [
       {
         href: "https://github.com/hey-aw/henry-habitat",
-        label: "Open source",
+        label: "View source",
         external: true,
       },
     ],
@@ -240,21 +236,60 @@ function MainMenu() {
 }
 
 function ProjectActions({ topic }: { topic: BoardTopic }) {
-  const directResources = topic.resources.filter(
-    (resource) => resource.href !== topic.noteHref,
+  const primaryHref = topic.noteHref ?? topic.resources[0]?.href;
+  const secondaryResources = topic.resources.filter(
+    (resource) => resource.href !== primaryHref,
   );
+
+  if (!secondaryResources.length) return null;
 
   return (
     <div className="topic-actions">
-      {topic.noteHref && (
-        <Link href={topic.noteHref}>
-          Read note <span aria-hidden="true">→</span>
-        </Link>
-      )}
-      {directResources.map((resource) => (
+      {secondaryResources.map((resource) => (
         <ResourceAnchor resource={resource} key={resource.href} />
       ))}
     </div>
+  );
+}
+
+function ProjectTitleLink({ topic }: { topic: BoardTopic }) {
+  const primaryResource = topic.noteHref
+    ? topic.resources.find((resource) => resource.href === topic.noteHref)
+    : topic.resources[0];
+
+  if (!primaryResource) return <h4>{topic.title}</h4>;
+
+  const title = (
+    <>
+      <span>{topic.title}</span>
+      <span className="topic-link-arrow" aria-hidden="true">
+        {primaryResource.external ? "↗" : "→"}
+      </span>
+    </>
+  );
+
+  return (
+    <h4>
+      {primaryResource.external ? (
+        <a
+          aria-keyshortcuts="ArrowUp ArrowDown Home End"
+          className="topic-title-link"
+          data-topic-link
+          href={primaryResource.href}
+        >
+          {title}
+        </a>
+      ) : (
+        <Link
+          aria-keyshortcuts="ArrowUp ArrowDown Home End"
+          className="topic-title-link"
+          data-topic-link
+          href={primaryResource.href}
+        >
+          {title}
+        </Link>
+      )}
+    </h4>
   );
 }
 
@@ -278,7 +313,7 @@ function MessageBoard({ board }: { board: BoardArea }) {
                 <p>Project topic</p>
                 <p>{topic.status}</p>
               </div>
-              <h4>{topic.title}</h4>
+              <ProjectTitleLink topic={topic} />
               <p>{topic.summary}</p>
               <ProjectActions topic={topic} />
             </article>
@@ -353,16 +388,22 @@ export default function Home() {
           </section>
         )}
 
-        <section id="boards" className="boards-panel panel" aria-labelledby="boards-title">
+        <section
+          id="boards"
+          className="boards-panel panel"
+          aria-labelledby="boards-title"
+        >
           <header className="panel-titlebar">
             <p>Project areas</p>
             <h2 id="boards-title">Project boards</h2>
           </header>
-          <div className="boards-grid">
-            {boardAreas.map((board) => (
-              <MessageBoard board={board} key={board.id} />
-            ))}
-          </div>
+          <ProjectKeyboardNavigation>
+            <div className="boards-grid">
+              {boardAreas.map((board) => (
+                <MessageBoard board={board} key={board.id} />
+              ))}
+            </div>
+          </ProjectKeyboardNavigation>
         </section>
 
         <section id="links" className="files-panel panel" aria-labelledby="links-title">

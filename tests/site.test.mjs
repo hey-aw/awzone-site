@@ -60,14 +60,18 @@ test("presents all eight real projects as topics across three project areas", as
   assert.match(page, /href: "https:\/\/movienight\.awzone\.com\/"/);
   assert.match(page, /The House with the Pink Door/);
   assert.match(page, /Henry's Habitat/);
+  assert.match(page, /label: "View source"/);
+  assert.doesNotMatch(page, /label: "Open source"/);
+  assert.doesNotMatch(page, /Service health|openscied-library-mcp\.vercel\.app\/healthz/);
   assert.match(page, /href: "https:\/\/pink\.awzone\.com\/"/);
   assert.match(page, /href: "https:\/\/github\.com\/hey-aw\/festavia-theme-site"/);
   assert.match(page, /href: "https:\/\/github\.com\/hey-aw\/henry-habitat"/);
   assert.match(page, /Project topic/);
   assert.match(page, /function ProjectActions/);
-  assert.match(page, /resource\.href !== topic\.noteHref/);
+  assert.match(page, /const primaryHref = topic\.noteHref \?\? topic\.resources\[0\]\?\.href/);
+  assert.match(page, /resource\.href !== primaryHref/);
+  assert.match(page, /if \(!secondaryResources\.length\) return null/);
   assert.match(page, /<ResourceAnchor resource=\{resource\}/);
-  assert.match(page, /Read note/);
   assert.match(page, /<a href=\{`\/notes\/\$\{latestNote\.slug\}`\}>/);
   assert.doesNotMatch(page, /<Link href=\{`\/notes\/\$\{latestNote\.slug\}`\}>/);
   assert.doesNotMatch(page, /href=\{`#file-\$\{topic\.slug\}`\}/);
@@ -94,7 +98,7 @@ test("uses the canonical links fragment and retains the real resource destinatio
   assert.match(page, /https:\/\/github\.com\/eddo-ai\/classroom-transcripts/);
   assert.match(page, /https:\/\/github\.com\/hey-aw\/that-movie-night-life/);
   assert.match(page, /\/notes\/openscied-from-rag-to-mcp/);
-  assert.match(page, /https:\/\/openscied-library-mcp\.vercel\.app\/healthz/);
+  assert.doesNotMatch(page, /https:\/\/openscied-library-mcp\.vercel\.app\/healthz/);
   assert.match(shell, /mailto:aw@awzone\.com/);
   assert.match(shell, /https:\/\/github\.com\/hey-aw/);
   assert.match(shell, /https:\/\/linkedin\.com\/in\/mattaw/);
@@ -166,8 +170,9 @@ test("renders typed, same-tab article links and accurate related source copy", a
 });
 
 test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", async () => {
-  const [page, shell, styles] = await Promise.all([
+  const [page, keyboardNavigation, shell, styles] = await Promise.all([
     readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/project-keyboard-navigation.tsx", root), "utf8"),
     readFile(new URL("app/site-shell.tsx", root), "utf8"),
     readFile(new URL("app/globals.css", root), "utf8"),
   ]);
@@ -176,12 +181,14 @@ test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", as
   assert.match(page, /<main id="board-content"/);
   assert.match(page, /<nav id="menu"/);
   assert.match(page, /<section id="latest"/);
-  assert.match(page, /<section id="boards"/);
+  assert.match(page, /<section\s+id="boards"/);
   assert.match(page, /<section id="links"/);
   assert.match(page, /<section id="about"/);
   assert.match(page, /aria-labelledby="main-menu-title"/);
   assert.match(page, /aria-labelledby="latest-title"/);
   assert.match(page, /aria-labelledby="boards-title"/);
+  assert.match(page, /data-topic-link/);
+  assert.match(page, /aria-keyshortcuts="ArrowUp ArrowDown Home End"/);
   assert.match(page, /aria-labelledby="links-title"/);
   assert.match(page, /Choose a menu item, or press Tab to move through links/);
   assert.match(shell, /aria-label="Board shortcuts"/);
@@ -191,6 +198,15 @@ test("keeps semantic, keyboard, focus, motion, and narrow-screen safeguards", as
   assert.match(styles, /prefers-reduced-motion:\s*reduce/);
   assert.match(styles, /a:focus-visible/);
   assert.match(styles, /outline:\s*3px solid var\(--amber\)/);
+  assert.doesNotMatch(page, /topic-command/);
+  assert.doesNotMatch(styles, /\.topic-command/);
+  assert.match(styles, /\.topic-title-link/);
+  assert.match(keyboardNavigation, /\["ArrowDown", "ArrowUp", "Home", "End"\]/);
+  assert.match(keyboardNavigation, /activeElement instanceof HTMLAnchorElement/);
+  assert.match(keyboardNavigation, /if \(!activeTopicLink\) return/);
+  assert.match(keyboardNavigation, /event\.preventDefault\(\)/);
+  assert.match(keyboardNavigation, /topicLinks\[nextIndex\]\?\.focus\(\)/);
+  assert.doesNotMatch(keyboardNavigation, /type="button"|Activate topic navigation/);
   assert.match(styles, /@media \(max-width: 720px\)/);
   assert.match(styles, /min-width:\s*320px/);
   assert.match(styles, /overflow-x:\s*hidden/);
