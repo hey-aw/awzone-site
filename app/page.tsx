@@ -132,11 +132,16 @@ const boardTopics: BoardTopic[] = [
   {
     slug: "that-movie-night-life",
     board: "side-projects",
-    status: "Native app",
+    status: "Native + web",
     title: "That Movie Night Life",
     summary:
-      "A SwiftUI iOS and tvOS app for drawing from a 10,734-film Letterboxd list while filtering watched titles and optional buzz kills.",
+      "A shared movie-night picker on the web and in SwiftUI for iOS and tvOS, drawing from a 10,734-film Letterboxd list with watched-title and buzz-kill filters.",
     resources: [
+      {
+        href: "https://movienight.awzone.com/",
+        label: "Open web app",
+        external: true,
+      },
       {
         href: "https://github.com/hey-aw/that-movie-night-life",
         label: "Open source",
