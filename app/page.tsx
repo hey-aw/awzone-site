@@ -168,17 +168,11 @@ const boardTopics: BoardTopic[] = [
   {
     slug: "henrys-habitat",
     board: "side-projects",
-    status: "Open source",
+    status: "Private project",
     title: "Henry's Habitat",
     summary:
       "A Raspberry Pi dashboard for Henry the red-footed tortoise, combining Zigbee temperature and humidity readings with a live habitat camera.",
-    resources: [
-      {
-        href: "https://github.com/hey-aw/henry-habitat",
-        label: "View source",
-        external: true,
-      },
-    ],
+    resources: [],
   },
 ];
 
@@ -416,7 +410,7 @@ export default function Home() {
             project boards above.
           </p>
           <ul className="resource-list">
-            {boardTopics.map((topic) => (
+            {boardTopics.filter((topic) => topic.resources.length).map((topic) => (
               <li id={`file-${topic.slug}`} key={topic.slug}>
                 <div>
                   <p>{topic.status}</p>
